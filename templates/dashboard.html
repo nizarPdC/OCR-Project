@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #f5f5f5;
+        }
+
+        header {
+            background-color: #38d39f;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode header {
+            background-color: #2e8b57;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .dark-mode nav a {
+            color: #f5f5f5;
+        }
+
+        nav a:hover {
+            background-color: #32be8f;
+        }
+
+        .dark-mode nav a:hover {
+            background-color: #28a745;
+        }
+
+        .header-title {
+            text-align: center;
+            margin-top: 80px;
+            margin-bottom: 30px;
+            color: #38d39f;
+            font-size: 2rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .dark-mode .header-title {
+            color: #2e8b57;
+        }
+
+        .container {
+            margin-top: 150px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode form {
+            background: #444;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        form input[type="text"], form input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode form input[type="text"], .dark-mode form input[type="date"] {
+            border-color: #666;
+            background-color: #555;
+            color: #f5f5f5;
+        }
+
+        form button {
+            background-color: #38d39f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode form button {
+            background-color: #2e8b57;
+        }
+
+        form button:hover {
+            background-color: #32be8f;
+        }
+
+        .dark-mode form button:hover {
+            background-color: #28a745;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chart-wrapper {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 45%;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .chart-wrapper {
+            background: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode table {
+            background: #444;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #cccccc;
+        }
+
+        .dark-mode th, .dark-mode td {
+            border-bottom: 1px solid #666;
+        }
+
+        th {
+            background-color: #38d39f;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .dark-mode th {
+            background-color: #2e8b57;
+            color: #f5f5f5;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        .dark-mode tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        tr:hover {
+            background-color: #e0f2f1;
+        }
+
+        .dark-mode tr:hover {
+            background-color: #444;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: #38d39f;
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 1px solid #38d39f;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+
+        .dark-mode .pagination a {
+            color: #f5f5f5;
+            border-color: #666;
+        }
+
+        .pagination a:hover {
+            background-color: #32be8f;
+            color: #ffffff;
+        }
+
+        .dark-mode .pagination a:hover {
+            background-color: #28a745;
+        }
+
+        .pagination span {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+
+        .toggle-button {
+            position: fixed;
+            bottom: 60px; /* Adjust this value to position the button above the footer */
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            z-index: 1001;
+        }
+
+        .dark-mode .toggle-button {
+            opacity: 0.9;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .per-page-select {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        form button,
+#exportCSV {
+    background-color: #38d39f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode form button,
+.dark-mode #exportCSV {
+    background-color: #2e8b57;
+}
+
+form button:hover,
+#exportCSV:hover {
+    background-color: #32be8f;
+}
+
+.dark-mode form button:hover,
+.dark-mode #exportCSV:hover {
+    background-color: #28a745;
+}
+        form button,
+        #exportCSV {
+            background-color: #38d39f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode form button,
+        .dark-mode #exportCSV {
+            background-color: #2e8b57;
+        }
+
+        form button:hover,
+        #exportCSV:hover {
+            background-color: #32be8f;
+        }
+
+        .dark-mode form button:hover,
+        .dark-mode #exportCSV:hover {
+            background-color: #28a745;
+        }
+
+        footer {
+            position: relative;
+            width: 100%;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            padding: 10px 0;
+            background-color: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode footer {
+            background-color: #333;
+            color: #999;
+        }
+
+        footer a {
+            color: #38d39f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .dark-mode footer a {
+            color: #2e8b57;
+        }
+
+        footer a:hover {
+            color: #32be8f;
+        }
+
+        .dark-mode footer a:hover {
+            color: #28a745;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <div class="header-title">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="container">
+        <form method="GET" action="{{ url_for('dashboard') }}">
+            <label for="error_filter">Filter by Errors:</label>
+            <input type="text" id="error_filter" name="error_filter" value="{{ request.args.get('error_filter', '') }}">
+            
+            <label for="dr_filter">Filter by DR:</label>
+            <input type="text" id="dr_filter" name="dr_filter" value="{{ request.args.get('dr_filter', '') }}">
+
+            <label for="date_filter">Filter by Date:</label>
+            <input type="date" id="date_filter" name="date_filter" value="{{ request.args.get('date_filter', '') }}">
+
+            <button type="submit">Apply Filter</button>
+            
+            <input type="hidden" name="page" value="{{ request.args.get('page', 1) }}">
+            <input type="hidden" name="per_page" value="{{ request.args.get('per_page', 25) }}">
+        </form>
+
+        <div class="chart-container">
+            <div class="chart-wrapper">
+                <canvas id="errorsOverTimeChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="drRegionDistributionChart"></canvas>
+            </div>
+        </div>
+
+        <button id="exportCSV">Export to CSV</button>
+
+        <p>Total Errors: {{ total_errors }}</p>
+        <p>Total Verifications: {{ total_verifications }}</p>
+
+        <div class="per-page-select">
+            <label for="per_page">Results per page:</label>
+            <select id="per_page" name="per_page" onchange="updatePerPage()">
+                <option value="25" {% if per_page == 25 %}selected{% endif %}>25</option>
+                <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>File Name</th>
+                    <th>Errors Found</th>
+                    <th>Date</th>
+                    <th>DR Region</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.username }}</td>
+                    <td>{{ record.file_name }}</td>
+                    <td>{{ record.errors }}</td>
+                    <td>{{ record.date_posted.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ record.dr_region }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if pagination.pages > 1 %}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+            <a href="{{ url_for('dashboard', page=pagination.prev_num, per_page=per_page, error_filter=request.args.get('error_filter', ''), dr_filter=request.args.get('dr_filter', ''), date_filter=request.args.get('date_filter', '')) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+            {% if pagination.has_next %}
+            <a href="{{ url_for('dashboard', page=pagination.next_num, per_page=per_page, error_filter=request.args.get('error_filter', ''), dr_filter=request.args.get('dr_filter', ''), date_filter=request.args.get('date_filter', '')) }}">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <img src="{{ url_for('static', filename='img/moon.png') }}" alt="Toggle Dark Mode" class="toggle-button" id="toggleButton">
+    <footer>
+        <p>&copy; 2024 Ali Belaouridi. All rights reserved.</p>
+    </footer>
+    <script>
+        const body = document.body;
+        const toggleButton = document.getElementById('toggleButton');
+
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            toggleButton.src = "{{ url_for('static', filename='img/sun.png') }}";
+        }
+
+        toggleButton.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                toggleButton.src = "{{ url_for('static', filename='img/sun.png') }}";
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                toggleButton.src = "{{ url_for('static', filename='img/moon.png') }}";
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        function updatePerPage() {
+            const perPageSelect = document.getElementById('per_page');
+            const perPage = perPageSelect.value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('per_page', perPage);
+            urlParams.set('page', 1);
+            window.location.search = urlParams.toString();
+        }
+
+        document.getElementById('exportCSV').addEventListener('click', function() {
+            exportTableToCSV('dashboard_data.csv');
+        });
+
+        function exportTableToCSV(filename) {
+            let csv = [];
+            const rows = document.querySelectorAll("table tr");
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll("td, th");
+                
+                for (let j = 0; j < cols.length; j++) 
+                    row.push(cols[j].innerText);
+                
+                csv.push(row.join(","));        
+            }
+
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+        function downloadCSV(csv, filename) {
+            const csvFile = new Blob([csv], {type: "text/csv"});
+            const downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        }
+
+        const errorsOverTimeCtx = document.getElementById('errorsOverTimeChart').getContext('2d');
+        const drRegionDistributionCtx = document.getElementById('drRegionDistributionChart').getContext('2d');
+
+        const errorsOverTimeChart = new Chart(errorsOverTimeCtx, {
+            type: 'line',
+            data: {
+                labels: {{ error_dates|tojson }},
+                datasets: [{
+                    label: 'Errors Over Time',
+                    data: {{ error_counts|tojson }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const drRegionDistributionChart = new Chart(drRegionDistributionCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ dr_regions|tojson }},
+                datasets: [{
+                    label: 'DR Region Distribution',
+                    data: {{ dr_counts|tojson }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
